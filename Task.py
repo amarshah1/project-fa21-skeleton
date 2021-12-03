@@ -103,12 +103,12 @@ class Task:
         Returns the value of the heuristic at a given time.
         """
         # creating a heursitic that is a linear combination of the (profit/time) and the dealine
-        a = 1.0 #coeffient for profit/time
-        b = 1.0 #coefficient for deadline
+        a = 0.5 #coeffient for profit/time
+        b = -0.1  #coefficient for deadline
     
         minutes_late = time + self.get_duration() - self.get_deadline()
         if time + self.get_duration() > self.maxTime:
-            return 0
+            return float('-inf')
         else:
             return (a * self.get_late_benefit(minutes_late)/self.get_duration()) + (b * self.get_deadline())
 
