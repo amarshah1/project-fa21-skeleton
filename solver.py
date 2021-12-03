@@ -22,26 +22,26 @@ def solve(tasks):
         output: list of igloos in order of polishing  
     """
 
-    correct_output_path = "samples/100.out"
-    correct_value = 0
-    time = 0
-    f = open(correct_output_path)
-    for elem in range(47):
-        igloo_number = int(f.readline())
-        # print(igloo_number)
-        this_igloo = tasks[igloo_number - 1]
-        time += this_igloo.get_duration()
-        correct_value += this_igloo.get_late_benefit(this_igloo.get_deadline() - time)
+    # correct_output_path = "samples/100.out"
+    # correct_value = 0
+    # time = 0
+    # f = open(correct_output_path)
+    # for elem in range(47):
+    #     igloo_number = int(f.readline())
+    #     # print(igloo_number)
+    #     this_igloo = tasks[igloo_number - 1]
+    #     time += this_igloo.get_duration()
+    #     correct_value += this_igloo.get_late_benefit(this_igloo.get_deadline() - time)
 
-    print(time)
-    print(correct_value)
+    # print(time)
+    # print(correct_value)
     
     
     output = list()
     curr_time = 0
     value = 0
 
-    while curr_time <= 1440:
+    while curr_time <= 1440 and len(tasks) > 0:
         scores = {t: t.get_Score(curr_time) for t in tasks}
         next_igloo = max(scores, key=scores.get)
 
@@ -70,9 +70,12 @@ def solve(tasks):
 
 # Solving outputs
 if __name__ == '__main__':
-    for input_path in os.listdir('inputs/large/'):
-        output_path = 'outputs/large/' + input_path[:-3] + '.out'
-        tasks = read_input_file('inputs/large/' + input_path)
+    for input_path in os.listdir('inputs/small/'):
+        if input_path[0] == '.':
+            continue
+        print(input_path)
+        output_path = 'outputs/small/' + input_path[:-3] + '.out'
+        tasks = read_input_file('inputs/small/' + input_path)
         output = solve(tasks)
         write_output_file(output_path, output)
 
