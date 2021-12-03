@@ -42,10 +42,13 @@ def solve(tasks):
     value = 0
 
     while curr_time <= 1440 and len(tasks) > 0:
+        # sort tasks by profit in descending order
+        tasks.sort(key= lambda x: x.get_late_benefit(), reverse= True)
+        
         scores = {t: t.get_Score(curr_time) for t in tasks}
         next_igloo = max(scores, key=scores.get)
 
-        #checks if there is none of the tasks finish before 1440
+        # checks if there is none of the tasks finish before 1440
         if scores[next_igloo] == float('-inf'):
             # print('break')
             break
@@ -61,12 +64,12 @@ def solve(tasks):
         
 
 # Here's an example of how to run your solver.
-if __name__ == '__main__':
-    for input_path in os.listdir('inputs/'):
-        output_path = 'outputs/' + input_path[:-3] + '.out'
-        tasks = read_input_file(input_path)
-        output = solve(tasks)
-        write_output_file(output_path, output)
+# if __name__ == '__main__':
+#     for input_path in os.listdir('inputs/'):
+#         output_path = 'outputs/' + input_path[:-3] + '.out'
+#         tasks = read_input_file(input_path)
+#         output = solve(tasks)
+#         write_output_file(output_path, output)
 
 # Solving outputs
 if __name__ == '__main__':
