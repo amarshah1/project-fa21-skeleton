@@ -14,7 +14,9 @@ import os
 #     for task in tasks:
         
 
-def solve(tasks):
+# the first solve function we wrote
+# used a heuristic that was a linear combination of (profit/time) and -(deadline)
+def solve1(tasks):
     """
     Args:
         tasks: list[Task], list of igloos to polish
@@ -58,15 +60,42 @@ def solve(tasks):
     # print(value)
     # print(curr_time)
     return output
-        
+
+
+def solve(tasks):
+    bestIgloos = list()
+    curr_time = 0
+    value = 0
+
+    while curr_time <= 1440 and len(tasks) > 0:
+        scores = {t: t.get_max_benefit() for t in tasks}
+        next_igloo = max(scores, key = scores.get)
+
+
+        #checks if out time goes over 1440
+        if curr_time + next_igloo.get_duration() > 1440:
+            break
+
+        bestIgloos.append(next_igloo)
+        curr_time += next_igloo.get_duration()
+        tasks.remove(next_igloo)
+    
+    bestIgloos.sort(key = Task.get_deadline)
+
+    output = list()
+    for igloo in bestIgloos:
+        output.append(igloo.get_task_id())
+
+    return output
+
 
 # Here's an example of how to run your solver.
-if __name__ == '__main__':
-    for input_path in os.listdir('inputs/'):
-        output_path = 'outputs/' + input_path[:-3] + '.out'
-        tasks = read_input_file(input_path)
-        output = solve(tasks)
-        write_output_file(output_path, output)
+# if __name__ == '__main__':
+#     for input_path in os.listdir('inputs/'):
+#         output_path = 'outputs/' + input_path[:-3] + '.out'
+#         tasks = read_input_file(input_path)
+#         output = solve(tasks)
+#         write_output_file(output_path, output)
 
 # Solving outputs
 if __name__ == '__main__':
