@@ -74,17 +74,18 @@ def solve(tasks):
 
     while curr_time <= 1440 and len(tasks) > 0:
         # scores = {t: t.get_max_benefit() for t in tasks}
-        next_igloo = max(tasks, key = Tasks.get_max_benefit_before_deadline(time))
+        # apparently using get_max_benefit_before_deadline makes it run worse. This should not be the case :(
+        next_igloo = max(tasks, key = (lambda x: x.get_max_benefit_before_deadline(curr_time)))
 
         #checks if out time goes over 1440
-        if next_igloo.get_max_benefit_before_deadline(time) == float("- inf"):
+        if next_igloo.get_max_benefit_before_deadline(curr_time) == float("-inf"):
             break
 
         bestIgloos.append(next_igloo)
         curr_time += next_igloo.get_duration()
         tasks.remove(next_igloo)
     
-    bestIgloos.sort(key = Task.get_deadline_minus_duration()) #sorting by deadline - duration instead of deadline
+    bestIgloos.sort(key = (lambda x: x.get_deadline())) #sorting by deadline instead of deadline - duration
 
     output = list()
     for igloo in bestIgloos:
