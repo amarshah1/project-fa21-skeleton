@@ -1,6 +1,18 @@
 from parse import read_input_file, write_output_file
 import os
 
+# def getBestTask(tasks, time):
+#     """
+#     Args:
+#         tasks: list[Task], list of igloos to polish
+#         time: current time; int between 0 and 2440
+#     Returns:
+#         output: best igloo that we can finish before the deadline
+#     """
+
+#     for task in tasks:
+        
+
 def solve(tasks):
     """
     Args:
@@ -10,7 +22,7 @@ def solve(tasks):
     """
 
     while time != 2440:
-        #still writing this loop
+
     pass
 
 

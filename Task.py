@@ -26,6 +26,7 @@ class Task:
         self.deadline = deadline
         self.duration = duration
         self.perfect_benefit = perfect_benefit
+        self.maxTime = 1440
         
     def get_task_id(self) -> int:
         """ 
@@ -102,5 +103,15 @@ class Task:
     b = 1.0 #coefficient for deadline
 
     def get_Score(self, time):
-        return (a * self.get_late_benefit(time)/self.get_duration()) + (b * self.get_deadline)
+        """
+        Returns the value of the heuristic at a given time.
+        """
+        minutes_late = time + self.get_duration - self.get_deadline
+        if time + self.get_duration > self.maxTime:
+            return 0
+        else:
+            return (a * self.get_late_benefit(minutes_late)/self.get_duration()) + (b * self.get_deadline)
+
+
+
 
