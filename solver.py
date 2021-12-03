@@ -78,6 +78,22 @@ if __name__ == '__main__':
         tasks = read_input_file('inputs/small/' + input_path)
         output = solve(tasks)
         write_output_file(output_path, output)
+    for input_path in os.listdir('inputs/medium/'):
+        if input_path[0] == '.':
+            continue
+        print(input_path)
+        output_path = 'outputs/medium/' + input_path[:-3] + '.out'
+        tasks = read_input_file('inputs/medium/' + input_path)
+        output = solve(tasks)
+        write_output_file(output_path, output)
+    for input_path in os.listdir('inputs/large/'):
+        if input_path[0] == '.':
+            continue
+        print(input_path)
+        output_path = 'outputs/large/' + input_path[:-3] + '.out'
+        tasks = read_input_file('inputs/large/' + input_path)
+        output = solve(tasks)
+        write_output_file(output_path, output)
 
 # Testing samples/100.in
 # if __name__ == '__main__':
