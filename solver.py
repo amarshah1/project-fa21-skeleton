@@ -8,8 +8,10 @@ def solve(tasks):
     Returns:
         output: list of igloos in order of polishing  
     """
-    
-    return 
+
+    while time != 2440:
+        #still writing this loop
+    pass
 
 
 # Here's an example of how to run your solver.
