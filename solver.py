@@ -47,7 +47,7 @@ def solve(tasks):
 
         #checks if there is none of the tasks finish before 1440
         if scores[next_igloo] == float('-inf'):
-            print('break')
+            # print('break')
             break
 
         output.append(next_igloo.get_task_id())
@@ -55,18 +55,18 @@ def solve(tasks):
         tasks.remove(next_igloo)
         value += next_igloo.get_late_benefit(next_igloo.get_deadline() - curr_time)
     
-    print(value)
-    print(curr_time)
+    # print(value)
+    # print(curr_time)
     return output
         
 
 # Here's an example of how to run your solver.
-# if __name__ == '__main__':
-#     for input_path in os.listdir('inputs/'):
-#         output_path = 'outputs/' + input_path[:-3] + '.out'
-#         tasks = read_input_file(input_path)
-#         output = solve(tasks)
-#         write_output_file(output_path, output)
+if __name__ == '__main__':
+    for input_path in os.listdir('inputs/'):
+        output_path = 'outputs/' + input_path[:-3] + '.out'
+        tasks = read_input_file(input_path)
+        output = solve(tasks)
+        write_output_file(output_path, output)
 
 # Solving outputs
 if __name__ == '__main__':
