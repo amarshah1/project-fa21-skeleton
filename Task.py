@@ -112,6 +112,14 @@ class Task:
         else:
             return (a * self.get_late_benefit(minutes_late)/self.get_duration()) + (b * self.get_deadline())
 
+    def get_time_to_deadline(self, time):
+        """
+        Return the time until deadline after completing igloo; if negative, then deadline has already passed. If '-inf', then doing this igloo passes the max time limit.
+        """
+        time_after_completion = time + self.get_duration()
 
-
+        if time_after_completion > self.maxTime:
+            return float('-inf')
+        else:
+            return self.get_deadline() - time_after_completion
 
