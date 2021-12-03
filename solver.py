@@ -26,10 +26,10 @@ def solve(tasks):
     curr_time = 0
 
     while curr_time <= 1440:
-        scores = {t: t.get_score(t, curr_time) for t in tasks}
+        scores = {t: t.get_Score(curr_time) for t in tasks}
         next_igloo = min(scores, key=scores.get)
         output.append(next_igloo)
-        curr_time += next_igloo.get_duration(next_igloo)
+        curr_time += next_igloo.get_duration()
         tasks.remove(next_igloo)
     
     return output
