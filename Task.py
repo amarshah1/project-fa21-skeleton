@@ -96,3 +96,11 @@ class Task:
         return "Task {} has deadline {}, duration {}, and max benefit {}".format(self.get_task_id(), self.get_deadline(), self.get_duration(), self.get_max_benefit())
 
     # Feel free to add more helper functions here
+
+    # creating a heursitic that is a linear combination of the (profit/time) and the dealine
+    a = 1.0 #coeffient for profit/time
+    b = 1.0 #coefficient for deadline
+
+    def get_Score(self, time):
+        return (a * self.get_late_benefit(time)/self.get_duration()) + (b * self.get_deadline)
+
