@@ -65,25 +65,26 @@ def solve1(tasks):
     return output
 
 
+# a slighlty better greedy algorithm
+# first finds the most valuable igloos and then picks then ones that have the earliest deadline
 def solve(tasks):
     bestIgloos = list()
     curr_time = 0
     value = 0
 
     while curr_time <= 1440 and len(tasks) > 0:
-        scores = {t: t.get_max_benefit() for t in tasks}
-        next_igloo = max(scores, key = scores.get)
-
+        # scores = {t: t.get_max_benefit() for t in tasks}
+        next_igloo = max(tasks, key = Tasks.get_max_benefit_before_deadline(time))
 
         #checks if out time goes over 1440
-        if curr_time + next_igloo.get_duration() > 1440:
+        if next_igloo.get_max_benefit_before_deadline(time) == float("- inf"):
             break
 
         bestIgloos.append(next_igloo)
         curr_time += next_igloo.get_duration()
         tasks.remove(next_igloo)
     
-    bestIgloos.sort(key = Task.get_deadline)
+    bestIgloos.sort(key = Task.get_deadline_minus_duration()) #sorting by deadline - duration instead of deadline
 
     output = list()
     for igloo in bestIgloos:
