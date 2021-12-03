@@ -45,7 +45,7 @@ def solve1(tasks):
 
     while curr_time <= 1440 and len(tasks) > 0:
         # sort tasks by profit in descending order
-        tasks.sort(key= lambda x: x.get_late_benefit(), reverse= True)
+        # tasks.sort(key= lambda x: x.get_late_benefit(), reverse= True)
         
         scores = {t: t.get_Score(curr_time) for t in tasks}
         next_igloo = max(scores, key=scores.get)
@@ -103,36 +103,39 @@ def solve(tasks):
 #         write_output_file(output_path, output)
 
 # Solving outputs
-if __name__ == '__main__':
-    for input_path in os.listdir('inputs/small/'):
-        if input_path[0] == '.':
-            continue
-        print(input_path)
-        output_path = 'outputs/small/' + input_path[:-3] + '.out'
-        tasks = read_input_file('inputs/small/' + input_path)
-        output = solve(tasks)
-        write_output_file(output_path, output)
-    for input_path in os.listdir('inputs/medium/'):
-        if input_path[0] == '.':
-            continue
-        print(input_path)
-        output_path = 'outputs/medium/' + input_path[:-3] + '.out'
-        tasks = read_input_file('inputs/medium/' + input_path)
-        output = solve(tasks)
-        write_output_file(output_path, output)
-    for input_path in os.listdir('inputs/large/'):
-        if input_path[0] == '.':
-            continue
-        print(input_path)
-        output_path = 'outputs/large/' + input_path[:-3] + '.out'
-        tasks = read_input_file('inputs/large/' + input_path)
-        output = solve(tasks)
-        write_output_file(output_path, output)
+def run_solver():
+    if __name__ == '__main__':
+        for input_path in os.listdir('inputs/small/'):
+            if input_path[0] == '.':
+                continue
+            print(input_path)
+            output_path = 'outputs/small/' + input_path[:-3] + '.out'
+            tasks = read_input_file('inputs/small/' + input_path)
+            output = solve(tasks)
+            write_output_file(output_path, output)
+        for input_path in os.listdir('inputs/medium/'):
+            if input_path[0] == '.':
+                continue
+            print(input_path)
+            output_path = 'outputs/medium/' + input_path[:-3] + '.out'
+            tasks = read_input_file('inputs/medium/' + input_path)
+            output = solve(tasks)
+            write_output_file(output_path, output)
+        for input_path in os.listdir('inputs/large/'):
+            if input_path[0] == '.':
+                continue
+            print(input_path)
+            output_path = 'outputs/large/' + input_path[:-3] + '.out'
+            tasks = read_input_file('inputs/large/' + input_path)
+            output = solve(tasks)
+            write_output_file(output_path, output)
 
-# Testing samples/100.in
-# if __name__ == '__main__':
-#     input_path = 'samples/100.in'
-#     output_path = 'sample.out'
-#     tasks = read_input_file(input_path)
-#     output = solve(tasks)
-#     write_output_file(output_path, output)
+    # Testing samples/100.in
+    # if __name__ == '__main__':
+    #     input_path = 'samples/100.in'
+    #     output_path = 'sample.out'
+    #     tasks = read_input_file(input_path)
+    #     output = solve(tasks)
+    #     write_output_file(output_path, output)
+    
+run_solver()
