@@ -8,7 +8,8 @@ def solve(tasks):
     Returns:
         output: list of igloos in order of polishing  
     """
-    pass
+    
+    return 
 
 
 # Here's an example of how to run your solver.
