@@ -25,7 +25,7 @@ def solve(tasks):
     output = list()
     curr_time = 0
 
-    while curr_time <= 1400:
+    while curr_time <= 1440:
         scores = {t: t.get_score(t, curr_time) for t in tasks}
         next_igloo = min(scores, key=scores.get)
         output.append(next_igloo)
@@ -42,3 +42,10 @@ def solve(tasks):
 #         tasks = read_input_file(input_path)
 #         output = solve(tasks)
 #         write_output_file(output_path, output)
+
+if __name__ == '__main__':
+    input_path = 'samples/100.in'
+    output_path = 'outputs/sample.out'
+    tasks = read_input_file(input_path)
+    output = solve(tasks)
+    write_output_file(output_path, output)
