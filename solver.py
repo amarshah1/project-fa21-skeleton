@@ -25,7 +25,7 @@ def solve(tasks):
     output = list()
     curr_time = 0
 
-    while curr_time <= 1400:
+    while curr_time <= 1440:
         scores = {t: t.get_score(t, curr_time) for t in tasks}
         next_igloo = min(scores, key=scores.get)
         output.append(next_igloo)
@@ -44,8 +44,16 @@ def solve(tasks):
 #         write_output_file(output_path, output)
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     for input_path in os.listdir('samplespractice/'):
         output_path = 'outputs/' + input_path[:-3] + '.out'
         tasks = read_input_file(input_path)
         output = solve(tasks)
         write_output_file(output_path, output)
+=======
+    input_path = 'samples/100.in'
+    output_path = 'outputs/sample.out'
+    tasks = read_input_file(input_path)
+    output = solve(tasks)
+    write_output_file(output_path, output)
+>>>>>>> e1465efeb19407222c857c095418bea0978f615d
