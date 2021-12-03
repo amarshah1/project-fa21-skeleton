@@ -68,12 +68,18 @@ def solve(tasks):
 #         output = solve(tasks)
 #         write_output_file(output_path, output)
 
-
-
-
+# Solving outputs
 if __name__ == '__main__':
-    input_path = 'samples/100.in'
-    output_path = 'sample.out'
-    tasks = read_input_file(input_path)
-    output = solve(tasks)
-    write_output_file(output_path, output)
+    for input_path in os.listdir('inputs/large/'):
+        output_path = 'outputs/large/' + input_path[:-3] + '.out'
+        tasks = read_input_file('inputs/large/' + input_path)
+        output = solve(tasks)
+        write_output_file(output_path, output)
+
+# Testing samples/100.in
+# if __name__ == '__main__':
+#     input_path = 'samples/100.in'
+#     output_path = 'sample.out'
+#     tasks = read_input_file(input_path)
+#     output = solve(tasks)
+#     write_output_file(output_path, output)
