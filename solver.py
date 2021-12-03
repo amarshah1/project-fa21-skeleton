@@ -1,3 +1,4 @@
+from Task import Task
 from parse import read_input_file, write_output_file
 import os
 
@@ -8,10 +9,21 @@ def solve(tasks):
     Returns:
         output: list of igloos in order of polishing  
     """
+    
+    output = list()
+    curr_time = 0
 
-    while time != 2440:
-        #still writing this loop
-    pass
+    while curr_time <= 1400:
+        scores = {t: t.get_score(t, curr_time) for t in tasks}
+        next_igloo = min(scores, key=scores.get)
+        output.append(next_igloo)
+        curr_time += next_igloo.get_duration(next_igloo)
+        tasks.remove(next_igloo)
+    
+    return output
+        
+        
+        
 
 
 # Here's an example of how to run your solver.
