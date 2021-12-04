@@ -120,6 +120,12 @@ class Task:
             return float("-inf")
         return self.get_max_benefit()
 
-
+    def get_late_benefit_before_time_limit(self, time):
+        time_after_completion = time + self.get_duration()
+        if time_after_completion > 1440:
+            return float('-inf')
+        else:
+            minutes_late = time_after_completion - self.deadline
+            return self.get_late_benefit(minutes_late)
 
 

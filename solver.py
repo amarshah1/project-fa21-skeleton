@@ -93,6 +93,36 @@ def solve(tasks):
 
     return output
 
+def solve_greg(tasks):
+    """
+    Args:
+        tasks: list[Task], list of igloos to polish
+    Returns:
+        output: list of igloos in order of polishing  
+    """
+    
+    output = list()
+    curr_time = 0
+    value = 0
+
+    while curr_time <= 1440 and len(tasks) > 0:
+        # sort tasks by profit (including late benefits) in descending order
+        tasks.sort(key= lambda x: x.get_late_benefit_before_time_limit(curr_time), reverse= True)
+        
+        next_igloo = tasks[0]
+
+        if next_igloo.get_late_benefit_before_time_limit(curr_time) == float('-inf'):
+                    # print('break')
+                    break
+
+        output.append(next_igloo.get_task_id())
+        curr_time += next_igloo.get_duration()
+        tasks.remove(next_igloo)
+        value += next_igloo.get_late_benefit(next_igloo.get_deadline() - curr_time)
+    
+    # print(value)
+    # print(curr_time)
+    return output
 
 # Here's an example of how to run your solver.
 # if __name__ == '__main__':
@@ -111,7 +141,7 @@ def run_solver():
             print(input_path)
             output_path = 'outputs/small/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/small/' + input_path)
-            output = solve(tasks)
+            output = solve_greg(tasks)
             write_output_file(output_path, output)
         for input_path in os.listdir('inputs/medium/'):
             if input_path[0] == '.':
@@ -119,7 +149,7 @@ def run_solver():
             print(input_path)
             output_path = 'outputs/medium/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/medium/' + input_path)
-            output = solve(tasks)
+            output = solve_greg(tasks)
             write_output_file(output_path, output)
         for input_path in os.listdir('inputs/large/'):
             if input_path[0] == '.':
@@ -127,7 +157,7 @@ def run_solver():
             print(input_path)
             output_path = 'outputs/large/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/large/' + input_path)
-            output = solve(tasks)
+            output = solve_greg(tasks)
             write_output_file(output_path, output)
 
     # Testing samples/100.in
