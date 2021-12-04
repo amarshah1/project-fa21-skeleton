@@ -113,7 +113,7 @@ def solve_greg(tasks):
 
         if next_igloo.get_late_benefit_before_time_limit(curr_time) == float('-inf'):
                     # print('break')
-                    break
+                    continue
 
         output.append(next_igloo.get_task_id())
         curr_time += next_igloo.get_duration()
