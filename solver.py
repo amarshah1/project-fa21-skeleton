@@ -45,7 +45,7 @@ def solve1(tasks):
 
     while curr_time <= 1440 and len(tasks) > 0:
         # sort tasks by profit in descending order
-        # tasks.sort(key= lambda x: x.get_late_benefit(), reverse= True)
+        tasks.sort(key= lambda x: x.get_late_benefit(), reverse= True)
         
         scores = {t: t.get_Score(curr_time) for t in tasks}
         next_igloo = max(scores, key=scores.get)
