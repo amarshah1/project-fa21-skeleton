@@ -170,13 +170,13 @@ def solve_greg(tasks):
 #basically, we assume that there is no late payoff, so the best tasks to do would be to 
 def dp_solver(tasks):
 
-# Here's an example of how to run your solver.
-# if __name__ == '__main__':
-#     for input_path in os.listdir('inputs/'):
-#         output_path = 'outputs/' + input_path[:-3] + '.out'
-#         tasks = read_input_file(input_path)
-#         output = solve(tasks)
-#         write_output_file(output_path, output)
+    # Here's an example of how to run your solver.
+    # if __name__ == '__main__':
+    #     for input_path in os.listdir('inputs/'):
+    #         output_path = 'outputs/' + input_path[:-3] + '.out'
+    #         tasks = read_input_file(input_path)
+    #         output = solve(tasks)
+    #         write_output_file(output_path, output)
 
         """
     Args:
@@ -189,7 +189,7 @@ def dp_solver(tasks):
     curr_time = 0
     value = 0
 
-    tasks.sort(key= lambda x: get_deadline(curr_time))
+    tasks.sort(key= lambda x: x.get_deadline(curr_time))
 
     while curr_time <= 1440 and len(tasks) > 0:
         return max
