@@ -1,8 +1,10 @@
 import Task
-import Math
-from queue import Priority Queue
+import math
+from queue import PriorityQueue
+from functools import total_ordering
 
 
+@total_ordering
 class Strand:
     def __init__(self, chosen_list: list, time: int, value: float, position: int) -> None:
         """
@@ -19,7 +21,7 @@ class Strand:
         - Strand object: corresponding Task object
 
         """
-        self.task_list = task_list
+        # self.task_list = task_list
         self.chosen_list = chosen_list
         self.time = time
         self.value = value
@@ -42,6 +44,17 @@ class Strand:
     	return self.position
 
     def get_value_over_time(self) -> float:
+    	if self.time == 0:
+    		return 0
     	return self.value / self.time
+
+    def get_printed_strand(self) -> str:
+    	return "[" + "".join(str(e) + "|" for e in self.get_chosen_list()) + ", " + str(self.get_time()) + ", " + str(self.get_value()) + ", " + str(self.get_position()) + "]"
+
+    def __eq__(self, other):
+    	return False
+
+    def __lt__(self, other):
+    	return True
 
 
