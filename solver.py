@@ -1,6 +1,48 @@
 from Task import Task
 from parse import read_input_file, write_output_file
 import os
+from dataclasses import dataclass, field
+from typing import Any
+
+
+#code for Priority Queus
+# @dataclass(order=True)
+# class PrioritizedItem:
+#     priority: int
+#     item: Any=field(compare=False)
+
+# pq = []                         # list of entries arranged in a heap
+# entry_finder = {}               # mapping of tasks to entries
+# REMOVED = '<removed-task>'      # placeholder for a removed task
+# counter = itertools.count()     # unique sequence count
+
+# def add_task(task, priority=0):
+#     'Add a new task or update the priority of an existing task'
+#     if task in entry_finder:
+#         remove_task(task)
+#     count = next(counter)
+#     entry = [priority, count, task]
+#     entry_finder[task] = entry
+#     heappush(pq, entry)
+
+# def remove_task(task):
+#     'Mark an existing task as REMOVED.  Raise KeyError if not found.'
+#     entry = entry_finder.pop(task)
+#     entry[-1] = REMOVED
+
+# def pop_task():
+#     'Remove and return the lowest priority task. Raise KeyError if empty.'
+#     while pq:
+#         priority, count, task = heappop(pq)
+#         if task is not REMOVED:
+#             del entry_finder[task]
+#             return task
+#     raise KeyError('pop from an empty priority queue')
+
+
+#have this run whichever version of solver that we want
+def solve(tasks):
+    return solve_greg(tasks)
 
 # def getBestTask(tasks, time):
 #     """
@@ -67,7 +109,7 @@ def solve1(tasks):
 
 # a slighlty better greedy algorithm
 # first finds the most valuable igloos and then picks then ones that have the earliest deadline
-def solve(tasks):
+def solve2(tasks):
     bestIgloos = list()
     curr_time = 0
     value = 0
@@ -124,6 +166,10 @@ def solve_greg(tasks):
     # print(curr_time)
     return output
 
+#writing a program that uses a naive dp
+#basically, we assume that there is no late payoff, so the best tasks to do would be to 
+def dp_solver(tasks):
+
 # Here's an example of how to run your solver.
 # if __name__ == '__main__':
 #     for input_path in os.listdir('inputs/'):
@@ -131,6 +177,39 @@ def solve_greg(tasks):
 #         tasks = read_input_file(input_path)
 #         output = solve(tasks)
 #         write_output_file(output_path, output)
+
+        """
+    Args:
+        tasks: list[Task], list of igloos to polish
+    Returns:
+        output: list of igloos in order of polishing  
+    """
+    
+    output = list()
+    curr_time = 0
+    value = 0
+
+    tasks.sort(key= lambda x: get_deadline(curr_time))
+
+    while curr_time <= 1440 and len(tasks) > 0:
+        return max
+    
+    # print(value)
+    # print(curr_time)
+    return output
+
+def dp_solver_helper(tasks, time):
+    if not tasks:
+        return 0
+
+
+#trying to first sort
+def memoized_dp_solver(tasks):
+    list_Of_Queues = []
+    for i in range(500):
+        list_Of_Queues.append([])
+
+    
 
 # Solving outputs
 def run_solver():
@@ -141,7 +220,7 @@ def run_solver():
             print(input_path)
             output_path = 'outputs/small/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/small/' + input_path)
-            output = solve_greg(tasks)
+            output = solve(tasks)
             write_output_file(output_path, output)
         for input_path in os.listdir('inputs/medium/'):
             if input_path[0] == '.':
@@ -149,7 +228,7 @@ def run_solver():
             print(input_path)
             output_path = 'outputs/medium/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/medium/' + input_path)
-            output = solve_greg(tasks)
+            output = solve(tasks)
             write_output_file(output_path, output)
         for input_path in os.listdir('inputs/large/'):
             if input_path[0] == '.':
@@ -157,7 +236,7 @@ def run_solver():
             print(input_path)
             output_path = 'outputs/large/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/large/' + input_path)
-            output = solve_greg(tasks)
+            output = solve(tasks)
             write_output_file(output_path, output)
 
     # Testing samples/100.in
