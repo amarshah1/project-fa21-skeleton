@@ -46,7 +46,7 @@ import math
 
 #have this run whichever version of solver that we want
 def solve(tasks):
-    return solve_greg(tasks)
+    return memoized_dp_solver(tasks)
 
 # def getBestTask(tasks, time):
 #     """
@@ -247,21 +247,31 @@ def helper(tasks, branch: Tree):
 
 #trying to first sort
 def memoized_dp_solver(tasks):
+    sgAnswer, sgValue = solve_greg(tasks)
     tasks.sort(key= lambda x: x.get_deadline(), reverse = True)
     n = len(tasks)
-    currentPQ = PriorityQueue()
+    currentPQ = PriorityQueue(maxsize = 1000)
     firstStrand = Strand([], 0, 0, 0)
     currentPQ.put((0, firstStrand))
     for i in range(n):
-        currentPQ = memoized_dp_helper(tasks, currentPQ)
+        currentPQ = memoized_dp_helper(tasks, currentPQ, sgValue)
         tasks = tasks[1:]
+        print('loop')
 
-    return currentPQ.queue[0][1].get_chosen_list()
+    bestStrand = currentPQ.queue[0][1]
+
+    if sgValue > -1 * bestStrand.get_value():
+        print(sgValue)
+        return sgAnswer, sgValue
+    else:
+        print('hit')
+        print(-1 * bestStrand.get_value())
+        return bestStrand.get_chosen_list(), -1 * bestStrand.get_value()
 
 
-def memoized_dp_helper(tasks, currentPQ):
-    nextPQ = PriorityQueue()
-    while not currentPQ.empty():
+def memoized_dp_helper(tasks, currentPQ, sgValue):
+    nextPQ = PriorityQueue(maxsize = 1000)
+    while not currentPQ.empty() and nextPQ.qsize() < 1000:
         if nextPQ.empty():
             bestStrand = Strand([], 1440, 1, 0)
         else:
@@ -273,7 +283,7 @@ def memoized_dp_helper(tasks, currentPQ):
         #     print('hurrah')
         currentStrand = currentPQ.get()[1]
         # print(len(tasks))
-        print(currentStrand.get_printed_strand())
+        # print(currentStrand.get_printed_strand())
         current_chosen_list = currentStrand.get_chosen_list()
         current_time = currentStrand.get_time()
         current_value = currentStrand.get_value()
@@ -287,13 +297,15 @@ def memoized_dp_helper(tasks, currentPQ):
         current_time += currentTask.get_duration()
         augmentedStrand = Strand(augmented_chosen_list, current_time, current_value, current_position + 1)
 
+        sgValue_over_time = -1 * sgValue / 1440.
+
         # (sameStrand.get_time() < bestStrand.get_time() or sameStrand.get_value() < bestStrand.get_value())
-        if (sameStrand.get_value_over_time() < 0.9 * bestStrand.get_value_over_time()) or sameStrand.get_chosen_list():
+        if (sameStrand.get_value_over_time() < bestStrand.get_value_over_time()) or not sameStrand.get_chosen_list() or sameStrand.get_value_over_time() < 0.99 * sgValue_over_time:
             if sameStrand.get_time() < 1440:
                 nextPQ.put((sameStrand.get_value_over_time(), sameStrand))
 
         # augmentedStrand.get_time() < bestStrand.get_time() or augmentedStrand.get_value() < bestStrand.get_value()
-        if augmentedStrand.get_value_over_time() < 0.9 *  bestStrand.get_value_over_time() or not augmentedStrand.get_chosen_list():
+        if augmentedStrand.get_value_over_time() <  bestStrand.get_value_over_time() or not augmentedStrand.get_chosen_list() or sameStrand.get_value_over_time() < 0.99 * sgValue_over_time:
             if augmentedStrand.get_time() < 1440:
                 nextPQ.put((augmentedStrand.get_value_over_time(), augmentedStrand))
 
