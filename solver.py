@@ -139,7 +139,7 @@ def solve2(tasks):
 
     return output
 
-def solve_greg(tasks):
+def solve_greg(tasks, snippet_size):
     """
     Args:
         tasks: list[Task], list of igloos to polish
@@ -157,7 +157,7 @@ def solve_greg(tasks):
         
         # Compare the soonest deadline of the first x number of igloos (tried with different snippet sizes from 40 to 1, and 20 seemed to work the best) (now trying to get a snippet size as a function to the length of tasks, so far len(tasks)/20(50?) seems to work the best)
         snip_size = math.ceil(len(tasks)/50)
-        snippet = tasks[:snip_size]
+        snippet = tasks[:snippet_size]
         snippet.sort(key= lambda x: x.get_deadline())
         
         next_igloo = snippet[0]
@@ -170,6 +170,11 @@ def solve_greg(tasks):
         curr_time += next_igloo.get_duration()
         tasks.remove(next_igloo)
         value += next_igloo.get_late_benefit(next_igloo.get_deadline() - curr_time)
+
+    return output, value
+
+def solve_greg_for_loop(tasks):
+    # write for loop in here
 
     return output, value
 
