@@ -161,7 +161,7 @@ def solve_greg(tasks, snippet_size):
         tasks.sort(key= lambda x: x.get_late_benefit_before_time_limit(curr_time) / x.get_duration(), reverse= True)
         
         # Compare the soonest deadline of the first x number of igloos (tried with different snippet sizes from 40 to 1, and 20 seemed to work the best) (now trying to get a snippet size as a function to the length of tasks, so far len(tasks)/20(50?) seems to work the best)
-        snip_size = math.ceil(len(tasks)/50)
+        snip_size = math.ceil(len(tasks)/snippet_size)
         snippet = tasks[:snippet_size]
         snippet.sort(key= lambda x: x.get_deadline())
         
@@ -186,7 +186,7 @@ def solve_greg_for_loop(tasks):
     output1, value1 = solve1(tasks_copy)
 
     tasks_copy2 = tasks.copy()
-    output2, value2 = solve2(tasks_copy)
+    output2, value2 = solve2(tasks_copy2)
 
     for i in range(1, len(tasks)):
         snippet_size = i
