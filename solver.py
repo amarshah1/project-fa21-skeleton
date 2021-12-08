@@ -46,7 +46,7 @@ import math
 
 #have this run whichever version of solver that we want
 def solve(tasks):
-    return memoized_dp_solver(tasks)
+    return solve_greg(tasks)
 
 # def getBestTask(tasks, time):
 #     """
