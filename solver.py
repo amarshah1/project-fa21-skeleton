@@ -46,7 +46,7 @@ import math
 
 #have this run whichever version of solver that we want
 def solve(tasks):
-    return solve_greg_for_loop(tasks)
+    return memoized_dp_solver(tasks)
 
 # def getBestTask(tasks, time):
 #     """
@@ -107,7 +107,7 @@ def solve1(tasks):
         value += next_igloo.get_late_benefit(next_igloo.get_deadline() - curr_time)
     
     # print(value)
-    # print(curr_time)
+    print(curr_time)
     return output, value
 
 
@@ -141,7 +141,7 @@ def solve2(tasks):
         value += igloo.get_late_benefit_before_time_limit(time)
         time += igloo.get_duration()
 
-    print(time)
+    # print(time)
     return output, value
 
 def solve_greg(tasks, snippet_size):
@@ -182,11 +182,11 @@ def solve_greg_for_loop(tasks):
     # write for loop in here
     snippetPQ = PriorityQueue()
 
-    tasks_copy = tasks.copy()
-    output1, value1 = solve1(tasks_copy)
+    # tasks_copy = tasks.copy()
+    # output1, value1 = solve1(tasks_copy)
 
-    tasks_copy2 = tasks.copy()
-    output2, value2 = solve2(tasks_copy2)
+    # tasks_copy2 = tasks.copy()
+    # output2, value2 = solve2(tasks_copy2)
 
     for i in range(1, len(tasks)):
         snippet_size = i
@@ -197,15 +197,15 @@ def solve_greg_for_loop(tasks):
     bestOutput = bestResult[1]
     bestValue = -1* bestResult[0]
 
-    if value1 > bestValue:
-        print("one")
-        bestValue = value1
-        bestOutput = output1
+    # if value1 > bestValue:
+    #     print("one")
+    #     bestValue = value1
+    #     bestOutput = output1
         
-    if value2 > value1:
-        print("two")
-        bestValue = value2
-        bestOutput = output2
+    # if value2 > value1:
+    #     print("two")
+    #     bestValue = value2
+    #     bestOutput = output2
 
 
     return bestOutput, bestValue
@@ -284,7 +284,7 @@ def helper(tasks, branch: Tree):
 
 #trying to first sort
 def memoized_dp_solver(tasks):
-    sgAnswer, sgValue = solve_greg(tasks)
+    sgAnswer, sgValue = solve_greg_for_loop(tasks)
     tasks.sort(key= lambda x: x.get_deadline(), reverse = True)
     n = len(tasks)
     currentPQ = PriorityQueue(maxsize = 1000)
@@ -337,12 +337,12 @@ def memoized_dp_helper(tasks, currentPQ, sgValue):
         sgValue_over_time = -1 * sgValue / 1440.
 
         # (sameStrand.get_time() < bestStrand.get_time() or sameStrand.get_value() < bestStrand.get_value())
-        if (sameStrand.get_value_over_time() < bestStrand.get_value_over_time()) or not sameStrand.get_chosen_list() or sameStrand.get_value_over_time() < 0.99 * sgValue_over_time:
+        if (sameStrand.get_value_over_time() < bestStrand.get_value_over_time()) or not sameStrand.get_chosen_list() or sameStrand.get_value_over_time() < 0.9 * sgValue_over_time:
             if sameStrand.get_time() < 1440:
                 nextPQ.put((sameStrand.get_value_over_time(), sameStrand))
 
         # augmentedStrand.get_time() < bestStrand.get_time() or augmentedStrand.get_value() < bestStrand.get_value()
-        if augmentedStrand.get_value_over_time() <  bestStrand.get_value_over_time() or not augmentedStrand.get_chosen_list() or sameStrand.get_value_over_time() < 0.99 * sgValue_over_time:
+        if augmentedStrand.get_value_over_time() <  bestStrand.get_value_over_time() or not augmentedStrand.get_chosen_list() or sameStrand.get_value_over_time() < 0.9 * sgValue_over_time:
             if augmentedStrand.get_time() < 1440:
                 nextPQ.put((augmentedStrand.get_value_over_time(), augmentedStrand))
 
