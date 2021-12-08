@@ -1,8 +1,10 @@
 from Task import Task
+from Strand import Strand
 from parse import read_input_file, write_output_file
 import os
 from dataclasses import dataclass, field
 from typing import Any
+from queue import PriorityQueue
 from Tree import Tree
 import math
 
@@ -44,7 +46,7 @@ import math
 
 #have this run whichever version of solver that we want
 def solve(tasks):
-    return solve_greg(tasks)
+    return memoized_dp_solver(tasks)
 
 # def getBestTask(tasks, time):
 #     """
@@ -206,41 +208,97 @@ def helper(tasks, branch: Tree):
     # print(curr_time)
     return 
 
-#writing a program that uses a naive dp
-#basically, we assume that there is no late payoff, so the best tasks to do would be to 
-def dp_solver(tasks):
-    """
-    Args:
-        tasks: list[Task], list of igloos to polish
-    Returns:
-        output: list of igloos in order of polishing  
-    """
+# #writing a program that uses a naive dp
+# #basically, we assume that there is no late payoff, so the best tasks to do would be to 
+# def dp_solver(tasks):
+
+# # Here's an example of how to run your solver.
+# # if __name__ == '__main__':
+# #     for input_path in os.listdir('inputs/'):
+# #         output_path = 'outputs/' + input_path[:-3] + '.out'
+# #         tasks = read_input_file(input_path)
+# #         output = solve(tasks)
+# #         write_output_file(output_path, output)
+
+#         """
+#     Args:
+#         tasks: list[Task], list of igloos to polish
+#     Returns:
+#         output: list of igloos in order of polishing  
+#     """
     
-    output = list()
-    curr_time = 0
-    value = 0
+#     output = list()
+#     curr_time = 0
+#     value = 0
 
-    tasks.sort(key= lambda x: x.get_deadline(curr_time))
+#     tasks.sort(key= lambda x: get_deadline(curr_time))
 
-    while curr_time <= 1440 and len(tasks) > 0:
-        return max
+#     while curr_time <= 1440 and len(tasks) > 0:
+#         return max
     
-    # print(value)
-    # print(curr_time)
-    return output
+#     # print(value)
+#     # print(curr_time)
+#     return output
 
-
-def dp_solver_helper(tasks, time):
-    if not tasks:
-        return 0
+# def dp_solver_helper(tasks, time):
+#     if not tasks:
+#         return 0
 
 
 #trying to first sort
 def memoized_dp_solver(tasks):
-    list_Of_Queues = []
-    for i in range(500):
-        list_Of_Queues.append([])
+    tasks.sort(key= lambda x: x.get_deadline(), reverse = True)
+    n = len(tasks)
+    currentPQ = PriorityQueue()
+    firstStrand = Strand([], 0, 0, 0)
+    currentPQ.put((0, firstStrand))
+    for i in range(n):
+        currentPQ = memoized_dp_helper(tasks, currentPQ)
+        tasks = tasks[1:]
 
+    return currentPQ.queue[0][1].get_chosen_list()
+
+
+def memoized_dp_helper(tasks, currentPQ):
+    nextPQ = PriorityQueue()
+    while not currentPQ.empty():
+        if nextPQ.empty():
+            bestStrand = Strand([], 1440, 1, 0)
+        else:
+            bestStrand = nextPQ.queue[0][1]
+        # print(currentPQ.queue[0][1].get_printed_strand())
+        # if currentPQ.queue[0][1].get_value() == 332.923:
+        #     print(currentPQ.queue)
+        #     curr1 = currentPQ.get()
+        #     print('hurrah')
+        currentStrand = currentPQ.get()[1]
+        # print(len(tasks))
+        print(currentStrand.get_printed_strand())
+        current_chosen_list = currentStrand.get_chosen_list()
+        current_time = currentStrand.get_time()
+        current_value = currentStrand.get_value()
+        current_position = currentStrand.get_position()
+
+        sameStrand = Strand(current_chosen_list, current_time, current_value, current_position + 1)
+
+        currentTask = tasks[0]
+        augmented_chosen_list = current_chosen_list + [currentTask.get_task_id()]
+        current_value -= currentTask.get_late_benefit_before_time_limit(current_time)
+        current_time += currentTask.get_duration()
+        augmentedStrand = Strand(augmented_chosen_list, current_time, current_value, current_position + 1)
+
+        # (sameStrand.get_time() < bestStrand.get_time() or sameStrand.get_value() < bestStrand.get_value())
+        if (sameStrand.get_value_over_time() < 0.9 * bestStrand.get_value_over_time()) or sameStrand.get_chosen_list():
+            if sameStrand.get_time() < 1440:
+                nextPQ.put((sameStrand.get_value_over_time(), sameStrand))
+
+        # augmentedStrand.get_time() < bestStrand.get_time() or augmentedStrand.get_value() < bestStrand.get_value()
+        if augmentedStrand.get_value_over_time() < 0.9 *  bestStrand.get_value_over_time() or not augmentedStrand.get_chosen_list():
+            if augmentedStrand.get_time() < 1440:
+                nextPQ.put((augmentedStrand.get_value_over_time(), augmentedStrand))
+
+    # print(nextPQ.queue)
+    return nextPQ
 
 # Solving outputs
 def run_solver():
