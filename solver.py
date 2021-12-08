@@ -125,6 +125,7 @@ def solve2(tasks):
 
         #checks if out time goes over 1440
         if next_igloo.get_max_benefit_before_deadline(curr_time) == float("-inf"):
+            print('hits')
             break
 
         bestIgloos.append(next_igloo)
@@ -140,6 +141,7 @@ def solve2(tasks):
         value += igloo.get_late_benefit_before_time_limit(time)
         time += igloo.get_duration()
 
+    print(time)
     return output, value
 
 def solve_greg(tasks, snippet_size):
