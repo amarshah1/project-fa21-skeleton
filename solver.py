@@ -5,6 +5,8 @@ import os
 from dataclasses import dataclass, field
 from typing import Any
 from queue import PriorityQueue
+from Tree import Tree
+import math
 
 
 #code for Priority Queus
@@ -44,7 +46,7 @@ from queue import PriorityQueue
 
 #have this run whichever version of solver that we want
 def solve(tasks):
-    return memoized_dp_solver(tasks)
+    return solve_greg(tasks)
 
 # def getBestTask(tasks, time):
 #     """
@@ -150,23 +152,61 @@ def solve_greg(tasks):
     value = 0
 
     while curr_time <= 1440 and len(tasks) > 0:
-        # sort tasks by profit (including late benefits) in descending order
-        tasks.sort(key= lambda x: x.get_late_benefit_before_time_limit(curr_time), reverse= True)
+        # sort tasks by profit per minute (including late benefits) in descending order
+        tasks.sort(key= lambda x: x.get_late_benefit_before_time_limit(curr_time) / x.get_duration(), reverse= True)
         
-        next_igloo = tasks[0]
+        # Compare the soonest deadline of the first x number of igloos (tried with different snippet sizes from 40 to 1, and 20 seemed to work the best) (now trying to get a snippet size as a function to the length of tasks, so far len(tasks)/20(50?) seems to work the best)
+        snip_size = math.ceil(len(tasks)/50)
+        snippet = tasks[:snip_size]
+        snippet.sort(key= lambda x: x.get_deadline())
+        
+        next_igloo = snippet[0]
 
         if next_igloo.get_late_benefit_before_time_limit(curr_time) == float('-inf'):
             # print('break')
             break
-
+        
         output.append(next_igloo.get_task_id())
         curr_time += next_igloo.get_duration()
         tasks.remove(next_igloo)
         value += next_igloo.get_late_benefit(next_igloo.get_deadline() - curr_time)
+
+    return output, value
+
+def solve_greg_2(tasks):
+    """
+    Args:
+        tasks: list[Task], list of igloos to polish
+    Returns:
+        output: list of igloos in order of polishing  
+    """
+    start_tree = Tree(list(), 0, 0, None, None)
+    helper(tasks, start_tree)
+
+def helper(tasks, branch: Tree):
+    if (len(tasks) < 1):
+        return 
+    curr_time = branch.get_total_time()
+    benefit = branch.get_total_benefit()
+
+    tasks.sort(key= lambda x: x.get_late_benefit_before_time_limit(curr_time), reverse= True)
+    
+    next_igloo = tasks[0]
+    if next_igloo.get_late_benefit_before_time_limit(curr_time) != float('-inf'):
+        branch.add_igloo(next_igloo, "left")
+    else:
+        branch.add_igloo(None, "left")
+    
+    branch.add_igloo(None, "right")
+    
+    tasks.remove(next_igloo)
+    
+    helper(tasks, branch.get_left_branch())
+    helper(tasks, branch.get_right_branch())
     
     # print(value)
     # print(curr_time)
-    return output
+    return 
 
 # #writing a program that uses a naive dp
 # #basically, we assume that there is no late payoff, so the best tasks to do would be to 
@@ -262,31 +302,88 @@ def memoized_dp_helper(tasks, currentPQ):
 
 # Solving outputs
 def run_solver():
+    # start: for local testing
+    subname = "-snipsize"
+    # end: for local testing
+    
     if __name__ == '__main__':
+        # start: for local testing
+        overall_total = 0
+        count = 0
+        # end: for local testing
         for input_path in os.listdir('inputs/small/'):
             if input_path[0] == '.':
                 continue
             print(input_path)
             output_path = 'outputs/small/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/small/' + input_path)
-            output = solve(tasks)
+            output, total_benefit = solve(tasks)
+            
+            # start: for local testing
+            file = open("testing" + subname + "/small_inputs_total_benefits.txt", "a")
+            file.write(input_path + ": " + str(total_benefit) + "\n")
+            overall_total += total_benefit
+            count += 1
+            # end: for local testing
+            
             write_output_file(output_path, output)
+        # start: for local testing
+        mean = overall_total / count
+        file.write("OVERALL TOTAL: " + str(overall_total) + "\n")
+        file.write("MEAN: " + str(mean) + "\n")
+        # end: for local testing
+        
+        # start: for local testing
+        overall_total = 0
+        count = 0
+        # end: for local testing
         for input_path in os.listdir('inputs/medium/'):
             if input_path[0] == '.':
                 continue
             print(input_path)
             output_path = 'outputs/medium/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/medium/' + input_path)
-            output = solve(tasks)
+            output, total_benefit = solve(tasks)
+            
+            # start: for local testing
+            file = open("testing" + subname + "/medium_inputs_total_benefits.txt", "a")
+            file.write(input_path + ": " + str(total_benefit) + "\n")
+            overall_total += total_benefit
+            count += 1
+            # end: for local testing
+            
             write_output_file(output_path, output)
+        # start: for local testing
+        mean = overall_total / count
+        file.write("OVERALL TOTAL: " + str(overall_total) + "\n")
+        file.write("MEAN: " + str(mean) + "\n")
+        # end: for local testing
+            
+        # start: for local testing
+        overall_total = 0
+        count = 0
+        # end: for local testing
         for input_path in os.listdir('inputs/large/'):
             if input_path[0] == '.':
                 continue
             print(input_path)
             output_path = 'outputs/large/' + input_path[:-3] + '.out'
             tasks = read_input_file('inputs/large/' + input_path)
-            output = solve(tasks)
+            output, total_benefit = solve(tasks)
+            
+            # start: for local testing
+            file = open("testing" + subname + "/large_inputs_total_benefits.txt", "a")
+            file.write(input_path + ": " + str(total_benefit) + "\n")
+            overall_total += total_benefit
+            count += 1
+            # end: for local testing
+            
             write_output_file(output_path, output)
+        # start: for local testing
+        mean = overall_total / count
+        file.write("OVERALL TOTAL: " + str(overall_total) + "\n")
+        file.write("MEAN: " + str(mean) + "\n")
+        # end: for local testing
 
     # Testing samples/100.in
     # if __name__ == '__main__':
