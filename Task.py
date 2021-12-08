@@ -1,5 +1,8 @@
 import math
+from functools import total_ordering
 
+
+@total_ordering
 class Task:
     def __init__(self, task_id: int, deadline: int, duration: int, perfect_benefit: float) -> None:
         """
@@ -127,5 +130,11 @@ class Task:
         else:
             minutes_late = time_after_completion - self.deadline
             return self.get_late_benefit(minutes_late)
+
+    def __eq__(self, other):
+        return False
+
+    def __lt__(self, other):
+        return True
 
 

@@ -46,7 +46,7 @@ import math
 
 #have this run whichever version of solver that we want
 def solve(tasks):
-    return memoized_dp_solver(tasks)
+    return solve_greg_for_loop(tasks)
 
 # def getBestTask(tasks, time):
 #     """
@@ -91,13 +91,13 @@ def solve1(tasks):
 
     while curr_time <= 1440 and len(tasks) > 0:
         # sort tasks by profit in descending order
-        tasks.sort(key= lambda x: x.get_late_benefit(), reverse= True)
+        tasks.sort(key= lambda x: x.get_late_benefit(curr_time), reverse= True)
         
-        scores = {t: t.get_Score(curr_time) for t in tasks}
-        next_igloo = max(scores, key=scores.get)
+        # scores = {t: t.get_Score(curr_time) for t in tasks}
+        next_igloo = max(tasks, key = lambda x: x.get_Score(curr_time))
 
         # checks if there is none of the tasks finish before 1440
-        if scores[next_igloo] == float('-inf'):
+        if next_igloo.get_Score == float('-inf'):
             # print('break')
             break
 
@@ -108,7 +108,7 @@ def solve1(tasks):
     
     # print(value)
     # print(curr_time)
-    return output
+    return output, value
 
 
 # a slighlty better greedy algorithm
@@ -133,11 +133,14 @@ def solve2(tasks):
     
     bestIgloos.sort(key = (lambda x: x.get_deadline())) #sorting by deadline instead of deadline - duration
 
+    time = 0
     output = list()
     for igloo in bestIgloos:
         output.append(igloo.get_task_id())
+        value += igloo.get_late_benefit_before_time_limit(time)
+        time += igloo.get_duration()
 
-    return output
+    return output, value
 
 def solve_greg(tasks, snippet_size):
     """
@@ -175,8 +178,35 @@ def solve_greg(tasks, snippet_size):
 
 def solve_greg_for_loop(tasks):
     # write for loop in here
+    snippetPQ = PriorityQueue()
 
-    return output, value
+    tasks_copy = tasks.copy()
+    output1, value1 = solve1(tasks_copy)
+
+    tasks_copy2 = tasks.copy()
+    output2, value2 = solve2(tasks_copy)
+
+    for i in range(1, len(tasks)):
+        snippet_size = i
+        sgOutput, sgValue = solve_greg(tasks, snippet_size)
+        snippetPQ.put((-1 * sgValue, sgOutput))
+
+    bestResult = snippetPQ.get()
+    bestOutput = bestResult[1]
+    bestValue = -1* bestResult[0]
+
+    if value1 > bestValue:
+        print("one")
+        bestValue = value1
+        bestOutput = output1
+        
+    if value2 > value1:
+        print("two")
+        bestValue = value2
+        bestOutput = output2
+
+
+    return bestOutput, bestValue
 
 def solve_greg_2(tasks):
     """
